@@ -12,23 +12,18 @@ function NumbersVisitor() {
 NumbersVisitor.prototype = Object.create(antlr4.tree.ParseTreeVisitor.prototype);
 NumbersVisitor.prototype.constructor = NumbersVisitor;
 
-// Visit a parse tree produced by NumbersParser#parse.
-NumbersVisitor.prototype.visitParse = function(ctx) {
+// Visit a parse tree produced by NumbersParser#query.
+NumbersVisitor.prototype.visitQuery = function(ctx) {
 };
 
 
-// Visit a parse tree produced by NumbersParser#atom.
-NumbersVisitor.prototype.visitAtom = function(ctx) {
+// Visit a parse tree produced by NumbersParser#countRule.
+NumbersVisitor.prototype.visitCountRule = function(ctx) {
 };
 
 
-// Visit a parse tree produced by NumbersParser#low.
-NumbersVisitor.prototype.visitLow = function(ctx) {
-};
-
-
-// Visit a parse tree produced by NumbersParser#high.
-NumbersVisitor.prototype.visitHigh = function(ctx) {
+// Visit a parse tree produced by NumbersParser#fruitRule.
+NumbersVisitor.prototype.visitFruitRule = function(ctx) {
 };
 
 

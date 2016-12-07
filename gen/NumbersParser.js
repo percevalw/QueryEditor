@@ -7,27 +7,15 @@ var NumbersVisitor = require('./NumbersVisitor').NumbersVisitor;
 var grammarFileName = "Numbers.g4";
 
 var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
-    "\u0003\u0005\"\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
-    "\u0004\u0004\u0005\t\u0005\u0003\u0002\u0003\u0002\u0003\u0002\u0007",
-    "\u0002\u000e\n\u0002\f\u0002\u000e\u0002\u0011\u000b\u0002\u0003\u0002",
-    "\u0003\u0002\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003",
-    "\u0003\u0003\u0005\u0003\u001b\n\u0003\u0003\u0004\u0003\u0004\u0003",
-    "\u0004\u0003\u0005\u0003\u0005\u0003\u0005\u0002\u0002\u0006\u0002\u0004",
-    "\u0006\b\u0002\u0002\u001f\u0002\n\u0003\u0002\u0002\u0002\u0004\u001a",
-    "\u0003\u0002\u0002\u0002\u0006\u001c\u0003\u0002\u0002\u0002\b\u001f",
-    "\u0003\u0002\u0002\u0002\n\u000f\u0005\u0004\u0003\u0002\u000b\f\u0007",
-    "\u0003\u0002\u0002\f\u000e\u0005\u0004\u0003\u0002\r\u000b\u0003\u0002",
-    "\u0002\u0002\u000e\u0011\u0003\u0002\u0002\u0002\u000f\r\u0003\u0002",
-    "\u0002\u0002\u000f\u0010\u0003\u0002\u0002\u0002\u0010\u0012\u0003\u0002",
-    "\u0002\u0002\u0011\u000f\u0003\u0002\u0002\u0002\u0012\u0013\u0007\u0002",
-    "\u0002\u0003\u0013\u0003\u0003\u0002\u0002\u0002\u0014\u0015\u0005\u0006",
-    "\u0004\u0002\u0015\u0016\b\u0003\u0001\u0002\u0016\u001b\u0003\u0002",
-    "\u0002\u0002\u0017\u0018\u0005\b\u0005\u0002\u0018\u0019\b\u0003\u0001",
-    "\u0002\u0019\u001b\u0003\u0002\u0002\u0002\u001a\u0014\u0003\u0002\u0002",
-    "\u0002\u001a\u0017\u0003\u0002\u0002\u0002\u001b\u0005\u0003\u0002\u0002",
-    "\u0002\u001c\u001d\u0006\u0004\u0002\u0002\u001d\u001e\u0007\u0004\u0002",
-    "\u0002\u001e\u0007\u0003\u0002\u0002\u0002\u001f \u0007\u0004\u0002",
-    "\u0002 \t\u0003\u0002\u0002\u0002\u0004\u000f\u001a"].join("");
+    "\u0003\u0005\u0011\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004",
+    "\t\u0004\u0003\u0002\u0003\u0002\u0003\u0002\u0003\u0002\u0003\u0003",
+    "\u0003\u0003\u0003\u0004\u0003\u0004\u0003\u0004\u0002\u0002\u0005\u0002",
+    "\u0004\u0006\u0002\u0002\r\u0002\b\u0003\u0002\u0002\u0002\u0004\f\u0003",
+    "\u0002\u0002\u0002\u0006\u000e\u0003\u0002\u0002\u0002\b\t\u0005\u0004",
+    "\u0003\u0002\t\n\u0005\u0006\u0004\u0002\n\u000b\u0007\u0002\u0002\u0003",
+    "\u000b\u0003\u0003\u0002\u0002\u0002\f\r\u0007\u0003\u0002\u0002\r\u0005",
+    "\u0003\u0002\u0002\u0002\u000e\u000f\u0007\u0004\u0002\u0002\u000f\u0007",
+    "\u0003\u0002\u0002\u0002\u0002"].join("");
 
 
 var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
@@ -36,11 +24,11 @@ var decisionsToDFA = atn.decisionToState.map( function(ds, index) { return new a
 
 var sharedContextCache = new antlr4.PredictionContextCache();
 
-var literalNames = [ null, "','" ];
+var literalNames = [  ];
 
-var symbolicNames = [ null, null, "Number", "WhiteSpace" ];
+var symbolicNames = [ null, "Count", "Fruits", "WS" ];
 
-var ruleNames =  [ "parse", "atom", "low", "high" ];
+var ruleNames =  [ "query", "countRule", "fruitRule" ];
 
 function NumbersParser (input) {
 	antlr4.Parser.call(this, input);
@@ -61,16 +49,15 @@ Object.defineProperty(NumbersParser.prototype, "atn", {
 });
 
 NumbersParser.EOF = antlr4.Token.EOF;
-NumbersParser.T__0 = 1;
-NumbersParser.Number = 2;
-NumbersParser.WhiteSpace = 3;
+NumbersParser.Count = 1;
+NumbersParser.Fruits = 2;
+NumbersParser.WS = 3;
 
-NumbersParser.RULE_parse = 0;
-NumbersParser.RULE_atom = 1;
-NumbersParser.RULE_low = 2;
-NumbersParser.RULE_high = 3;
+NumbersParser.RULE_query = 0;
+NumbersParser.RULE_countRule = 1;
+NumbersParser.RULE_fruitRule = 2;
 
-function ParseContext(parser, parent, invokingState) {
+function QueryContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
 	}
@@ -79,43 +66,40 @@ function ParseContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = NumbersParser.RULE_parse;
+    this.ruleIndex = NumbersParser.RULE_query;
     return this;
 }
 
-ParseContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
-ParseContext.prototype.constructor = ParseContext;
+QueryContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
+QueryContext.prototype.constructor = QueryContext;
 
-ParseContext.prototype.atom = function(i) {
-    if(i===undefined) {
-        i = null;
-    }
-    if(i===null) {
-        return this.getTypedRuleContexts(AtomContext);
-    } else {
-        return this.getTypedRuleContext(AtomContext,i);
-    }
+QueryContext.prototype.countRule = function() {
+    return this.getTypedRuleContext(CountRuleContext,0);
 };
 
-ParseContext.prototype.EOF = function() {
+QueryContext.prototype.fruitRule = function() {
+    return this.getTypedRuleContext(FruitRuleContext,0);
+};
+
+QueryContext.prototype.EOF = function() {
     return this.getToken(NumbersParser.EOF, 0);
 };
 
-ParseContext.prototype.enterRule = function(listener) {
+QueryContext.prototype.enterRule = function(listener) {
     if(listener instanceof NumbersListener ) {
-        listener.enterParse(this);
+        listener.enterQuery(this);
 	}
 };
 
-ParseContext.prototype.exitRule = function(listener) {
+QueryContext.prototype.exitRule = function(listener) {
     if(listener instanceof NumbersListener ) {
-        listener.exitParse(this);
+        listener.exitQuery(this);
 	}
 };
 
-ParseContext.prototype.accept = function(visitor) {
+QueryContext.prototype.accept = function(visitor) {
     if ( visitor instanceof NumbersVisitor ) {
-        return visitor.visitParse(this);
+        return visitor.visitQuery(this);
     } else {
         return visitor.visitChildren(this);
     }
@@ -124,30 +108,19 @@ ParseContext.prototype.accept = function(visitor) {
 
 
 
-NumbersParser.ParseContext = ParseContext;
+NumbersParser.QueryContext = QueryContext;
 
-NumbersParser.prototype.parse = function() {
+NumbersParser.prototype.query = function() {
 
-    var localctx = new ParseContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 0, NumbersParser.RULE_parse);
-    var _la = 0; // Token type
+    var localctx = new QueryContext(this, this._ctx, this.state);
+    this.enterRule(localctx, 0, NumbersParser.RULE_query);
     try {
         this.enterOuterAlt(localctx, 1);
+        this.state = 6;
+        this.countRule();
+        this.state = 7;
+        this.fruitRule();
         this.state = 8;
-        this.atom();
-        this.state = 13;
-        this._errHandler.sync(this);
-        _la = this._input.LA(1);
-        while(_la===NumbersParser.T__0) {
-            this.state = 9;
-            this.match(NumbersParser.T__0);
-            this.state = 10;
-            this.atom();
-            this.state = 15;
-            this._errHandler.sync(this);
-            _la = this._input.LA(1);
-        }
-        this.state = 16;
         this.match(NumbersParser.EOF);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -163,7 +136,7 @@ NumbersParser.prototype.parse = function() {
     return localctx;
 };
 
-function AtomContext(parser, parent, invokingState) {
+function CountRuleContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
 	}
@@ -172,38 +145,32 @@ function AtomContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = NumbersParser.RULE_atom;
-    this._low = null; // LowContext
-    this._high = null; // HighContext
+    this.ruleIndex = NumbersParser.RULE_countRule;
     return this;
 }
 
-AtomContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
-AtomContext.prototype.constructor = AtomContext;
+CountRuleContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
+CountRuleContext.prototype.constructor = CountRuleContext;
 
-AtomContext.prototype.low = function() {
-    return this.getTypedRuleContext(LowContext,0);
+CountRuleContext.prototype.Count = function() {
+    return this.getToken(NumbersParser.Count, 0);
 };
 
-AtomContext.prototype.high = function() {
-    return this.getTypedRuleContext(HighContext,0);
-};
-
-AtomContext.prototype.enterRule = function(listener) {
+CountRuleContext.prototype.enterRule = function(listener) {
     if(listener instanceof NumbersListener ) {
-        listener.enterAtom(this);
+        listener.enterCountRule(this);
 	}
 };
 
-AtomContext.prototype.exitRule = function(listener) {
+CountRuleContext.prototype.exitRule = function(listener) {
     if(listener instanceof NumbersListener ) {
-        listener.exitAtom(this);
+        listener.exitCountRule(this);
 	}
 };
 
-AtomContext.prototype.accept = function(visitor) {
+CountRuleContext.prototype.accept = function(visitor) {
     if ( visitor instanceof NumbersVisitor ) {
-        return visitor.visitAtom(this);
+        return visitor.visitCountRule(this);
     } else {
         return visitor.visitChildren(this);
     }
@@ -212,103 +179,16 @@ AtomContext.prototype.accept = function(visitor) {
 
 
 
-NumbersParser.AtomContext = AtomContext;
+NumbersParser.CountRuleContext = CountRuleContext;
 
-NumbersParser.prototype.atom = function() {
+NumbersParser.prototype.countRule = function() {
 
-    var localctx = new AtomContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 2, NumbersParser.RULE_atom);
-    try {
-        this.state = 24;
-        this._errHandler.sync(this);
-        var la_ = this._interp.adaptivePredict(this._input,1,this._ctx);
-        switch(la_) {
-        case 1:
-            this.enterOuterAlt(localctx, 1);
-            this.state = 18;
-            localctx._low = this.low();
-            console.log("low  = " + (localctx._low===null ? null : this._input.getText(new antlr4.Interval(localctx._low.start,localctx._low.stop))))
-            break;
-
-        case 2:
-            this.enterOuterAlt(localctx, 2);
-            this.state = 21;
-            localctx._high = this.high();
-            console.log("high = " + (localctx._high===null ? null : this._input.getText(new antlr4.Interval(localctx._high.start,localctx._high.stop))))
-            break;
-
-        }
-    } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
-    } finally {
-        this.exitRule();
-    }
-    return localctx;
-};
-
-function LowContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
-    this.parser = parser;
-    this.ruleIndex = NumbersParser.RULE_low;
-    return this;
-}
-
-LowContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
-LowContext.prototype.constructor = LowContext;
-
-LowContext.prototype.Number = function() {
-    return this.getToken(NumbersParser.Number, 0);
-};
-
-LowContext.prototype.enterRule = function(listener) {
-    if(listener instanceof NumbersListener ) {
-        listener.enterLow(this);
-	}
-};
-
-LowContext.prototype.exitRule = function(listener) {
-    if(listener instanceof NumbersListener ) {
-        listener.exitLow(this);
-	}
-};
-
-LowContext.prototype.accept = function(visitor) {
-    if ( visitor instanceof NumbersVisitor ) {
-        return visitor.visitLow(this);
-    } else {
-        return visitor.visitChildren(this);
-    }
-};
-
-
-
-
-NumbersParser.LowContext = LowContext;
-
-NumbersParser.prototype.low = function() {
-
-    var localctx = new LowContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 4, NumbersParser.RULE_low);
+    var localctx = new CountRuleContext(this, this._ctx, this.state);
+    this.enterRule(localctx, 2, NumbersParser.RULE_countRule);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 26;
-        if (!( console.log(this._input.LT(1).text) && parseInt(this._input.LT(1).text) <= 500)) {
-            throw new antlr4.error.FailedPredicateException(this, "console.log(this._input.LT(1).text) && parseInt(this._input.LT(1).text) <= 500");
-        }
-        this.state = 27;
-        this.match(NumbersParser.Number);
+        this.state = 10;
+        this.match(NumbersParser.Count);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;
@@ -323,7 +203,7 @@ NumbersParser.prototype.low = function() {
     return localctx;
 };
 
-function HighContext(parser, parent, invokingState) {
+function FruitRuleContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
 	}
@@ -332,32 +212,32 @@ function HighContext(parser, parent, invokingState) {
 	}
 	antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
-    this.ruleIndex = NumbersParser.RULE_high;
+    this.ruleIndex = NumbersParser.RULE_fruitRule;
     return this;
 }
 
-HighContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
-HighContext.prototype.constructor = HighContext;
+FruitRuleContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
+FruitRuleContext.prototype.constructor = FruitRuleContext;
 
-HighContext.prototype.Number = function() {
-    return this.getToken(NumbersParser.Number, 0);
+FruitRuleContext.prototype.Fruits = function() {
+    return this.getToken(NumbersParser.Fruits, 0);
 };
 
-HighContext.prototype.enterRule = function(listener) {
+FruitRuleContext.prototype.enterRule = function(listener) {
     if(listener instanceof NumbersListener ) {
-        listener.enterHigh(this);
+        listener.enterFruitRule(this);
 	}
 };
 
-HighContext.prototype.exitRule = function(listener) {
+FruitRuleContext.prototype.exitRule = function(listener) {
     if(listener instanceof NumbersListener ) {
-        listener.exitHigh(this);
+        listener.exitFruitRule(this);
 	}
 };
 
-HighContext.prototype.accept = function(visitor) {
+FruitRuleContext.prototype.accept = function(visitor) {
     if ( visitor instanceof NumbersVisitor ) {
-        return visitor.visitHigh(this);
+        return visitor.visitFruitRule(this);
     } else {
         return visitor.visitChildren(this);
     }
@@ -366,16 +246,16 @@ HighContext.prototype.accept = function(visitor) {
 
 
 
-NumbersParser.HighContext = HighContext;
+NumbersParser.FruitRuleContext = FruitRuleContext;
 
-NumbersParser.prototype.high = function() {
+NumbersParser.prototype.fruitRule = function() {
 
-    var localctx = new HighContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 6, NumbersParser.RULE_high);
+    var localctx = new FruitRuleContext(this, this._ctx, this.state);
+    this.enterRule(localctx, 4, NumbersParser.RULE_fruitRule);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 29;
-        this.match(NumbersParser.Number);
+        this.state = 12;
+        this.match(NumbersParser.Fruits);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;
@@ -388,25 +268,6 @@ NumbersParser.prototype.high = function() {
         this.exitRule();
     }
     return localctx;
-};
-
-
-NumbersParser.prototype.sempred = function(localctx, ruleIndex, predIndex) {
-	switch(ruleIndex) {
-	case 2:
-			return this.low_sempred(localctx, predIndex);
-    default:
-        throw "No predicate with index:" + ruleIndex;
-   }
-};
-
-NumbersParser.prototype.low_sempred = function(localctx, predIndex) {
-	switch(predIndex) {
-		case 0:
-			return console.log(this._input.LT(1).text) && parseInt(this._input.LT(1).text) <= 500;
-		default:
-			throw "No predicate with index:" + predIndex;
-	}
 };
 
 

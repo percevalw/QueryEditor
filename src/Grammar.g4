@@ -6,7 +6,7 @@ query
 
 criteria
     : {1==0}? VARIABLE LIT_OPERATOR literal
-    | VARIABLE LIT_OPERATOR array
+    | VARIABLE ENS_OPERATOR array
     ;
 VARIABLE
     : 'mid'

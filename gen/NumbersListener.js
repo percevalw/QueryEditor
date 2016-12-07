@@ -11,39 +11,30 @@ function NumbersListener() {
 NumbersListener.prototype = Object.create(antlr4.tree.ParseTreeListener.prototype);
 NumbersListener.prototype.constructor = NumbersListener;
 
-// Enter a parse tree produced by NumbersParser#parse.
-NumbersListener.prototype.enterParse = function(ctx) {
+// Enter a parse tree produced by NumbersParser#query.
+NumbersListener.prototype.enterQuery = function(ctx) {
 };
 
-// Exit a parse tree produced by NumbersParser#parse.
-NumbersListener.prototype.exitParse = function(ctx) {
-};
-
-
-// Enter a parse tree produced by NumbersParser#atom.
-NumbersListener.prototype.enterAtom = function(ctx) {
-};
-
-// Exit a parse tree produced by NumbersParser#atom.
-NumbersListener.prototype.exitAtom = function(ctx) {
+// Exit a parse tree produced by NumbersParser#query.
+NumbersListener.prototype.exitQuery = function(ctx) {
 };
 
 
-// Enter a parse tree produced by NumbersParser#low.
-NumbersListener.prototype.enterLow = function(ctx) {
+// Enter a parse tree produced by NumbersParser#countRule.
+NumbersListener.prototype.enterCountRule = function(ctx) {
 };
 
-// Exit a parse tree produced by NumbersParser#low.
-NumbersListener.prototype.exitLow = function(ctx) {
+// Exit a parse tree produced by NumbersParser#countRule.
+NumbersListener.prototype.exitCountRule = function(ctx) {
 };
 
 
-// Enter a parse tree produced by NumbersParser#high.
-NumbersListener.prototype.enterHigh = function(ctx) {
+// Enter a parse tree produced by NumbersParser#fruitRule.
+NumbersListener.prototype.enterFruitRule = function(ctx) {
 };
 
-// Exit a parse tree produced by NumbersParser#high.
-NumbersListener.prototype.exitHigh = function(ctx) {
+// Exit a parse tree produced by NumbersParser#fruitRule.
+NumbersListener.prototype.exitFruitRule = function(ctx) {
 };
 
 
