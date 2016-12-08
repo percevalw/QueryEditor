@@ -1,56 +1,86 @@
 var antlr4 = require('antlr4/index');
-var NumbersLexer = require('../gen/NumbersLexer');
-var NumbersParser = require('../gen/NumbersParser');
+var GrammarLexer = require('../gen/GrammarLexer');
+var GrammarParser = require('../gen/GrammarParser');
 var util = require('util');
 
 var ErrorListener = require('antlr4/error/ErrorListener').ErrorListener;
-function TestGrammarErrorListener() {
+function ParserErrorListener() {
     ErrorListener.call(this);
     this.partialLastToken = null;
     this.errors = [];
     return this;
 }
 
-TestGrammarErrorListener.prototype = Object.create(ErrorListener.prototype);
-TestGrammarErrorListener.prototype.constructor = TestGrammarErrorListener;
+ParserErrorListener.prototype = Object.create(ErrorListener.prototype);
+ParserErrorListener.prototype.constructor = ParserErrorListener;
 
-TestGrammarErrorListener.prototype.syntaxError = function(recognizer, offendingSymbol, line, column, msg, e) {
+ParserErrorListener.prototype.syntaxError = function(recognizer, offendingSymbol, line, column, msg, e) {
     this.errors.push(arguments);
 
-    console.log(offendingSymbol);
+    var expected_tokens = recognizer._errHandler.getExpectedTokens(recognizer);
+    var expected_string = expected_tokens.toString(recognizer.literalNames, recognizer.symbolicNames);
+
+    console.log("EXPECTED", expected_string);
 
     this.partialLastToken = null;
-    var typeAssistTokens = ["Fruits"];
+    var typeAssistTokens = ["Fruits", "Count"];
     var parser = recognizer._ctx.parser,
         tokens = parser.getTokenStream().tokens;
 
+    var t = recognizer.getCurrentToken();
+    console.log("currentToken", t);
+    console.log("tokenErrorDisplay", recognizer.getTokenErrorDisplay(t))
+
     // last token is always "fake" EOF token
     if (tokens.length > 1) {
-        var lastToken = tokens[tokens.length - 2],
-            tokenType = parser.symbolicNames[lastToken.type];
+        var lastToken = tokens[tokens.length - 2];
 
-        this.tokenType = tokenType;
-        console.log("tokenType", tokenType)
-        if (typeAssistTokens.indexOf(tokenType) >= 0) {
+        if (true){//typeAssistTokens.indexOf(expected_string) >= 0) {
             this.partialLastToken = lastToken.text;
-            console.log(this.partialLastToken);
+            console.log("PARTIAL", this.partialLastToken);
         }
     }
 };
 
-TestGrammarErrorListener.INSTANCE = new TestGrammarErrorListener()
+ParserErrorListener.INSTANCE = new ParserErrorListener();
 
+function LexerErrorListener() {
+    ErrorListener.call(this);
+    this.partialLastToken = null;
+    this.errors = [];
+    return this;
+}
 
-var input = 'count ';
+LexerErrorListener.prototype = Object.create(ErrorListener.prototype);
+LexerErrorListener.prototype.constructor = LexerErrorListener;
+
+LexerErrorListener.prototype.syntaxError = function(recognizer, offendingSymbol, line, column, msg, e) {
+    this.errors.push(arguments);
+
+    var start = recognizer._tokenStartCharIndex;
+    var stop = recognizer._input.index;
+    var text = recognizer._input.getText(start, stop);
+    console.log("LEXER", text);
+};
+
+LexerErrorListener.INSTANCE = new LexerErrorListener();
+
+var input = 'trades IN "test",5';
+console.log(new Date());
+console.log("INPUT : '" + input + "'");
+console.log("=============================")
 var chars = new antlr4.InputStream(input);
-var lexer = new NumbersLexer.NumbersLexer(chars);
+var lexer = new GrammarLexer.GrammarLexer(chars);
 var tokens  = new antlr4.CommonTokenStream(lexer);
-var parser = new NumbersParser.NumbersParser(tokens);
+var parser = new GrammarParser.GrammarParser(tokens);
 parser.removeErrorListeners();
-parser.addErrorListener(TestGrammarErrorListener.INSTANCE);
+parser.addErrorListener(ParserErrorListener.INSTANCE);
+lexer.removeErrorListeners();
+lexer.addErrorListener(LexerErrorListener.INSTANCE);
+
 
 parser.buildParseTrees = true;
 var tree = parser.query();
 //console.log("Parsed: "+ util.inspect(tree));
-var children = tree.toStringTree(["query", 'countRule', 'fruitRule']);
+var children = tree.toStringTree(parser.ruleNames);
 console.log(children);

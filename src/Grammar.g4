@@ -1,31 +1,30 @@
 grammar Grammar;
 
 query
-    : criteria
+    : '(' criteria ')'
+    | criteria ('AND' criteria | 'OR' criteria |)
     ;
 
 criteria
-    : {1==0}? VARIABLE LIT_OPERATOR literal
-    | VARIABLE ENS_OPERATOR array
+    : (LIT_VAR LIT_OPERATOR literal)
+    | (ENS_VAR ENS_OPERATOR array)
     ;
-VARIABLE
-    : 'mid'
-    | 'trades'
-    | 'ask'
-    | 'bid';
+
 ENS_VAR
-    : 'trades';
+    : 'traders'
+    | 'trades'
+    ;
 
 LIT_VAR
     : 'mid'
     | 'ask'
-    | 'bid';
+    | 'bid'
+    ;
+
 LIT_OPERATOR
-    : '='
-    | '>'
-    | '<'
-    | '>='
-    | '>='
+    : '=='
+    | '=<'
+    | '=>'
     ;
 ENS_OPERATOR
     : 'IN'
@@ -35,7 +34,7 @@ value
     | array
     ;
 array
-    : literal ( ',' literal )*
+    : literal ( ',' literal )+
     ;
 literal
     : STRING
@@ -62,6 +61,10 @@ fragment INT
 fragment EXP
    : [Ee] [+\-]? INT
    ;
+
+WORD:
+    [a-zA-Z0-9]+;
+
 WS
    : [ \t\n\r] + -> skip
    ;

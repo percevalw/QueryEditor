@@ -1,15 +1,12 @@
 grammar Numbers;
 
-query: countRule fruitRule EOF;
-
-countRule: Count;
-
-fruitRule: Fruits;
+query: Count Fruits EOF;
 
 // Lexer
-Count: [Cc] [Oo] [Uu] [Nn] [Tt];
-Fruits: [0-9a-zA-Z]+;
-WS: [\s] -> skip;
+Count: 'C';
+//Count: [Cc] [Oo] [Uu] [Nn] [Tt];
+Fruits: 'Z' | 'K' ;
+//Fruits: [0-9a-zA-Z]+;
 
 //parse
 //  :  atom (',' atom)* EOF

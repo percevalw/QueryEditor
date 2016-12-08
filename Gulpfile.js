@@ -13,14 +13,14 @@ const path = require('path');
 const config = {
     sourcesJS: 'src/**/*.js',
     finalNameJS: 'all.js',
-    sourcesG4: 'src/Numbers.g4',
+    sourcesG4: 'src/Grammar.g4',
     finalDirJS: 'dist',
     generatedG4: 'gen/',
     antlr4Cmd: 'java -Xmx500M -cp "/usr/local/lib/antlr-4.5.3-complete.jar:$CLASSPATH" org.antlr.v4.Tool'
 
 };
 
-gulp.task('buildJS', ['buildG4'], () => {
+gulp.task('buildJS', [], () => {
     return gulp.src(config.sourcesJS)
         .pipe(sourcemaps.init())
         .pipe(babel({
@@ -52,10 +52,15 @@ gulp.task('runBuildJS', ['buildJS'], () => {
     //require(filePathJS);
 });
 
+gulp.task('runBuildJS_G4', ['buildG4'], () => {
+    gulp.run(['runBuildJS']);
+});
+
 gulp.task('watchJS',['buildJS', 'runBuildJS'], function () {
     gulp.watch(config.sourcesJS , ['buildJS', 'runBuildJS']);
 });
 
 gulp.task('watchAll', function () {
-    gulp.watch([config.sourcesJS, config.sourcesG4], ['runBuildJS']);
+    gulp.watch([config.sourcesG4], ['runBuildJS_G4']);
+    gulp.watch([config.sourcesJS], ['runBuildJS']);
 });
