@@ -1,12 +1,17 @@
 grammar Grammar;
 
+main:
+    | query EOF
+    ;
+
 query
-    : '(' criteria ')'
-    | criteria ('AND' criteria | 'OR' criteria |)
+    : '(' query ')'
+    |  query ('AND' query | 'OR' query)
+    | criteria
     ;
 
 criteria
-    : (LIT_VAR LIT_OPERATOR literal)
+    : (LIT_VAR LIT_OPERATOR (literal | LIT_VAR))
     | (ENS_VAR ENS_OPERATOR array)
     ;
 
@@ -22,19 +27,15 @@ LIT_VAR
     ;
 
 LIT_OPERATOR
-    : '=='
-    | '=<'
-    | '=>'
-    ;
+    : ('=' | '>' | '<') '=';
 ENS_OPERATOR
-    : 'IN'
-    | 'NOT IN';
+    : (|'NOT ') 'IN';
 value
     : literal
     | array
     ;
 array
-    : literal ( ',' literal )+
+    : literal ( ',' literal )*
     ;
 literal
     : STRING
@@ -62,8 +63,12 @@ fragment EXP
    : [Ee] [+\-]? INT
    ;
 
-WORD:
-    [a-zA-Z0-9]+;
+ENTITY:
+    ([a-zA-Z0-9])+;
+
+CHAR:
+    ~[ \t\n\r]
+    ;
 
 WS
    : [ \t\n\r] + -> skip

@@ -9,10 +9,18 @@ const concat = require('gulp-concat');
 const glob = require('glob');
 const exec = require('child_process').exec;
 const path = require('path');
+const browserify = require('browserify');
+const babelify = require('babelify');
+const gutil = require('gulp-util');
+const rename = require("gulp-rename");
+const source = require("vinyl-source-stream");
 
 const config = {
-    sourcesJS: 'src/**/*.js',
-    finalNameJS: 'all.js',
+    sourcesWatch: 'src/**/*.js',
+    sourcesDevJS: 'src/dev.js',
+    sourcesClientJS: 'src/**/*.js',
+    finalNameDevJS: 'dev.js',
+    finalNameClientJS: 'client.js',
     sourcesG4: 'src/Grammar.g4',
     finalDirJS: 'dist',
     generatedG4: 'gen/',
@@ -20,15 +28,36 @@ const config = {
 
 };
 
+
+
 gulp.task('buildJS', [], () => {
-    return gulp.src(config.sourcesJS)
+    return gulp.src(config.sourcesDevJS)
+        .on('error', function(error) {gutil.log(gutil.colors.red(error)); this.emit('end')})
         .pipe(sourcemaps.init())
         .pipe(babel({
             presets: ['es2015']
         }))
-        .pipe(concat(config.finalNameJS))
+        .pipe(concat(config.finalNameDevJS))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(config.finalDirJS));
+});
+
+gulp.task('buildClientJS', [], () => {
+    return browserify({
+        entries: glob.sync(config.sourcesClientJS),
+        insertGlobalVars: {
+            angular: function(file, dir) {
+                return 'window.angular';
+            }
+        }
+    })
+        .transform(babelify.configure({
+            presets : ["es2015"]
+        }))
+        .bundle()
+        .on('error', function(error) {gutil.log(gutil.colors.red(error)); this.emit('end')})
+        .pipe(source(config.finalNameClientJS))
+        .pipe(gulp.dest(config.finalDirJS))
 });
 
 gulp.task('buildG4', (cb) => {
@@ -46,21 +75,17 @@ gulp.task('buildG4', (cb) => {
     });
 });
 
-gulp.task('runBuildJS', ['buildJS'], () => {
-    const filePathJS = './' + config.finalDirJS + '/' + config.finalNameJS;
-    delete require.cache[require.resolve(filePathJS)]
-    //require(filePathJS);
-});
 
-gulp.task('runBuildJS_G4', ['buildG4'], () => {
-    gulp.run(['runBuildJS']);
+gulp.task('buildJS_G4', ['buildG4'], () => {
+    gulp.run(['buildClientJS']);
 });
 
 gulp.task('watchJS',['buildJS', 'runBuildJS'], function () {
-    gulp.watch(config.sourcesJS , ['buildJS', 'runBuildJS']);
+    gulp.watch(config.sourcesWatch , ['buildJS', 'runBuildJS']);
 });
 
 gulp.task('watchAll', function () {
-    gulp.watch([config.sourcesG4], ['runBuildJS_G4']);
-    gulp.watch([config.sourcesJS], ['runBuildJS']);
+    gulp.run(['buildJS_G4']);
+    gulp.watch([config.sourcesG4], ['buildJS_G4']);
+    gulp.watch([config.sourcesWatch], ['buildClientJS']);
 });

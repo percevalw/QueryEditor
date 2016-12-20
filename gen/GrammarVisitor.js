@@ -12,6 +12,11 @@ function GrammarVisitor() {
 GrammarVisitor.prototype = Object.create(antlr4.tree.ParseTreeVisitor.prototype);
 GrammarVisitor.prototype.constructor = GrammarVisitor;
 
+// Visit a parse tree produced by GrammarParser#main.
+GrammarVisitor.prototype.visitMain = function(ctx) {
+};
+
+
 // Visit a parse tree produced by GrammarParser#query.
 GrammarVisitor.prototype.visitQuery = function(ctx) {
 };

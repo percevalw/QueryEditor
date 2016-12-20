@@ -11,6 +11,15 @@ function GrammarListener() {
 GrammarListener.prototype = Object.create(antlr4.tree.ParseTreeListener.prototype);
 GrammarListener.prototype.constructor = GrammarListener;
 
+// Enter a parse tree produced by GrammarParser#main.
+GrammarListener.prototype.enterMain = function(ctx) {
+};
+
+// Exit a parse tree produced by GrammarParser#main.
+GrammarListener.prototype.exitMain = function(ctx) {
+};
+
+
 // Enter a parse tree produced by GrammarParser#query.
 GrammarListener.prototype.enterQuery = function(ctx) {
 };
