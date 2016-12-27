@@ -19951,6 +19951,7 @@ var MongoParser = function () {
         value: function get_suggestions(expected, existing) {
             var _this2 = this;
 
+            console.log("EXPECTED", expected);
             var suggestions = _.flatten(expected.map(function (t) {
                 return _this2.symbol_token_mapping[t] || [];
             }), true);
@@ -19991,7 +19992,7 @@ var MongoParser = function () {
                 };
             });
             console.log(res);
-            return Object.values(res);
+            return _.values(res);
         }
     }, {
         key: 'parse',
@@ -20012,7 +20013,7 @@ var MongoParser = function () {
             var tree = parser.main();
 
             var visitor_res = ast_mongo_transformer.process(tree, error_listener.errors.length > 0);
-            console.log(error_listener.errors);
+            console.log("ERROR", error_listener.errors);
             var errors = error_listener.errors;
             return {
                 mongo_query: visitor_res.ast,

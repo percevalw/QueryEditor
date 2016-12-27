@@ -22,10 +22,13 @@ const config = {
     finalNameDevJS: 'dev.js',
     finalNameClientJS: 'client.js',
     sourcesG4: 'src/Grammar.g4',
-    finalDirJS: 'dist',
+    finalDir: 'dist/',
     generatedG4: 'gen/',
-    antlr4Cmd: 'java -Xmx500M -cp "/usr/local/lib/antlr-4.5.3-complete.jar:$CLASSPATH" org.antlr.v4.Tool'
-
+    antlr4Cmd: 'java -Xmx500M -cp "/usr/local/lib/antlr-4.5.3-complete.jar:$CLASSPATH" org.antlr.v4.Tool',
+    copy_assets_files: [
+        "node_modules/angular/angular.min.js",
+        "node_modules/bootstrap/dist/css/bootstrap.min.css"
+    ]
 };
 
 
@@ -39,7 +42,7 @@ gulp.task('buildJS', [], () => {
         }))
         .pipe(concat(config.finalNameDevJS))
         .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(config.finalDirJS));
+        .pipe(gulp.dest(config.finalDir));
 });
 
 gulp.task('buildClientJS', [], () => {
@@ -57,7 +60,7 @@ gulp.task('buildClientJS', [], () => {
         .bundle()
         .on('error', function(error) {gutil.log(gutil.colors.red(error)); this.emit('end')})
         .pipe(source(config.finalNameClientJS))
-        .pipe(gulp.dest(config.finalDirJS))
+        .pipe(gulp.dest(config.finalDir))
 });
 
 gulp.task('buildG4', (cb) => {
@@ -75,6 +78,23 @@ gulp.task('buildG4', (cb) => {
     });
 });
 
+gulp.task('server', (cb) => {
+    var port = process.env.PORT || 8080;
+    var express = require('express');
+    var app = express();
+
+    app.get('/', function(req, res){
+        res.sendfile('client/index.html');
+    });
+    app.use(express.static('dist'));
+
+    app.listen(port, function () {
+        console.log('Listening on port ' + port);
+        cb();
+    });
+
+});
+
 
 gulp.task('buildJS_G4', ['buildG4'], () => {
     gulp.run(['buildClientJS']);
@@ -89,3 +109,13 @@ gulp.task('watchAll', function () {
     gulp.watch([config.sourcesG4], ['buildJS_G4']);
     gulp.watch([config.sourcesWatch], ['buildClientJS']);
 });
+
+gulp.task('copyAssets', function() {
+    return gulp
+        .src(config.copy_assets_files)
+        .pipe(gulp.dest(config.finalDir));
+});
+
+gulp.task('build', ['buildJS_G4', 'copyAssets']);
+
+gulp.task('default', ['server']);

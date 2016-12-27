@@ -175,6 +175,7 @@ class MongoParser {
     }
 
     get_suggestions(expected, existing) {
+        console.log("EXPECTED", expected)
         const suggestions = _.flatten(expected.map(t => (this.symbol_token_mapping[t] || [])), true);
         const filtered = suggestions.filter(suggestion => {
             console.log("EXISINTG", suggestion, existing);
@@ -209,7 +210,7 @@ class MongoParser {
             }
         });
         console.log(res);
-        return Object.values(res);
+        return _.values(res);
     }
 
     parse(input) {
@@ -227,7 +228,7 @@ class MongoParser {
         var tree = parser.main();
 
         const visitor_res = ast_mongo_transformer.process(tree, error_listener.errors.length>0);
-        console.log(error_listener.errors);
+        console.log("ERROR", error_listener.errors);
         const errors = error_listener.errors;
         return {
             mongo_query: visitor_res.ast,
