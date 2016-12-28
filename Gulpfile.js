@@ -3,17 +3,6 @@
  */
 
 const gulp = require('gulp');
-const sourcemaps = require('gulp-sourcemaps');
-const babel = require('gulp-babel');
-const concat = require('gulp-concat');
-const glob = require('glob');
-const exec = require('child_process').exec;
-const path = require('path');
-const browserify = require('browserify');
-const babelify = require('babelify');
-const gutil = require('gulp-util');
-const rename = require("gulp-rename");
-const source = require("vinyl-source-stream");
 
 const config = {
     sourcesWatch: 'src/**/*.js',
@@ -34,6 +23,11 @@ const config = {
 
 
 gulp.task('buildJS', [], () => {
+    const sourcemaps = require('gulp-sourcemaps');
+    const babel = require('gulp-babel');
+    const gutil = require('gulp-util');
+    const concat = require('gulp-concat');
+
     return gulp.src(config.sourcesDevJS)
         .on('error', function(error) {gutil.log(gutil.colors.red(error)); this.emit('end')})
         .pipe(sourcemaps.init())
@@ -46,6 +40,11 @@ gulp.task('buildJS', [], () => {
 });
 
 gulp.task('buildClientJS', [], () => {
+    const babelify = require('babelify');
+    const browserify = require('browserify');
+    const source = require("vinyl-source-stream");
+    const glob = require('glob');
+
     return browserify({
         entries: glob.sync(config.sourcesClientJS),
         insertGlobalVars: {
@@ -64,6 +63,9 @@ gulp.task('buildClientJS', [], () => {
 });
 
 gulp.task('buildG4', (cb) => {
+    const path = require('path');
+    const exec = require('child_process').exec;
+
     const cmd =
         config.antlr4Cmd + ' -o ' +
         path.resolve(config.generatedG4) +
