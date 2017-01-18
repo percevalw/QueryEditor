@@ -6,7 +6,7 @@ const gulp = require('gulp');
 
 const config = {
     sourcesWatch: 'src/**/*.js',
-    sourcesDevJS: 'src/dev.js',
+    sourcesDevJS: ['dev.js', 'src/index.js'],
     sourcesClientJS: 'src/**/*.js',
     finalNameDevJS: 'dev.js',
     finalNameClientJS: 'client.js',
@@ -15,6 +15,7 @@ const config = {
     generatedG4: 'gen/',
     antlr4Cmd: 'java -Xmx500M -cp "/usr/local/lib/antlr-4.5.3-complete.jar:$CLASSPATH" org.antlr.v4.Tool',
     copy_assets_files: [
+        "client/index.html",
         "node_modules/angular/angular.min.js",
         "node_modules/bootstrap/dist/css/bootstrap.min.css"
     ]
@@ -22,7 +23,7 @@ const config = {
 
 
 
-gulp.task('buildJS', [], () => {
+gulp.task('buildDevJS', [], () => {
     const sourcemaps = require('gulp-sourcemaps');
     const babel = require('gulp-babel');
     const gutil = require('gulp-util');
@@ -86,7 +87,7 @@ gulp.task('server', (cb) => {
     var app = express();
 
     app.get('/', function(req, res){
-        res.sendfile('client/index.html');
+        res.sendfile('dist/index.html');
     });
     app.use(express.static('dist'));
 
@@ -99,17 +100,18 @@ gulp.task('server', (cb) => {
 
 
 gulp.task('buildJS_G4', ['buildG4'], () => {
-    gulp.run(['buildClientJS']);
+    gulp.run(['buildDevJS', 'buildClientJS']);
 });
 
-gulp.task('watchJS',['buildJS', 'runBuildJS'], function () {
-    gulp.watch(config.sourcesWatch , ['buildJS', 'runBuildJS']);
+gulp.task('watchJS',['buildDevJS', 'runBuildJS'], function () {
+    gulp.watch(config.sourcesWatch , ['buildDevJS', 'runBuildJS']);
 });
 
 gulp.task('watchAll', function () {
     gulp.run(['buildJS_G4']);
     gulp.watch([config.sourcesG4], ['buildJS_G4']);
     gulp.watch([config.sourcesWatch], ['buildClientJS']);
+    gulp.watch([config.sourcesDevJS], ['buildDevJS']);
 });
 
 gulp.task('copyAssets', function() {

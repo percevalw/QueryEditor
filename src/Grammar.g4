@@ -6,30 +6,52 @@ main:
 
 query
     : '(' query ')'
-    |  query ('AND' query | 'OR' query)
-    | criteria
+    | criteria ('and' query|'or' query|)
     ;
 
 criteria
     : (LIT_VAR LIT_OPERATOR (literal | LIT_VAR))
-    | (ENS_VAR ENS_OPERATOR array)
+    | ('one' ENS_VAR_SINGULAR |'all' ENS_VAR_PLURAL) part_criteria
     ;
 
-ENS_VAR
-    : 'traders'
-    | 'trades'
+part_criteria
+    : must_have_criteria | normal_criteria;
+
+must_have_criteria
+    : {0 == 1}? (MUST_HAVE criteria);
+
+normal_criteria
+    : LIT_OPERATOR array;
+
+MUST_HAVE: 'must have';
+
+ENS_VAR_SINGULAR
+    : ENS_VAR
     ;
+
+ENS_VAR_PLURAL
+    : ENS_VAR's'
+    ;
+
+fragment ENS_VAR
+    : 'friend'
+    | 'part'
+    ;
+
+
+
 
 LIT_VAR
-    : 'mid'
-    | 'ask'
-    | 'bid'
+    : 'name'
+    | 'size'
+    | 'color'
+    | 'price'
     ;
 
 LIT_OPERATOR
-    : ('=' | '>' | '<') '=';
-ENS_OPERATOR
-    : (|'NOT ') 'IN';
+    : ('==' | '>=' | '<=' | 'in' | 'not in');
+//ENS_OPERATOR
+//    : (|'NOT ') 'IN';
 value
     : literal
     | array
@@ -64,7 +86,7 @@ fragment EXP
    ;
 
 ENTITY:
-    ([a-zA-Z0-9])+;
+    ([a-zA-Z0-9\.])+;
 
 CHAR:
     ~[ \t\n\r]

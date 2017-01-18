@@ -9,7 +9,6 @@ var RuleContext = require('antlr4/RuleContext');
 var Utils = require('antlr4/Utils');
 var util = require('util');
 var ErrorListener = require('antlr4/error/ErrorListener').ErrorListener;
-var treeify = require('treeify');
 var _ = require('lodash');
 // endregion INCLUDES
 
@@ -25,6 +24,7 @@ ParserErrorListener.prototype = Object.create(ErrorListener.prototype);
 ParserErrorListener.prototype.constructor = ParserErrorListener;
 
 ParserErrorListener.prototype.syntaxError = function(recognizer, offendingSymbol, line, column, msg, e) {
+    console.log(recognizer);
     var expected_tokens = recognizer._errHandler.getExpectedTokens(recognizer);
     var expected_tokens_names = [];
 
@@ -81,8 +81,8 @@ class AstMongoTransformer {
     literalToMongo(literal) {
         if (literal.children[0].symbol == 'NUMBER')
             return parseInt(literal.children[0].text)
-        else if (literal.children[0].symbol == 'STRING');
-        return literal.children[0].text.substr(1, literal.children[0].text.length - 2);
+        else if (literal.children[0].symbol == 'STRING')
+            return literal.children[0].text.substr(1, literal.children[0].text.length - 2);
     }
 
     arrayToMongo(array) {
@@ -93,14 +93,14 @@ class AstMongoTransformer {
         if (criteria.children[2].rule == 'literal') {
             return {
                 [criteria.children[0].text]: {
-                    [this.operatorToMongo(criteria.children[1].text)]: this.literalToMongo(criteria.children[2])
+                    [this.operatorToMongo(criteria.children[1])]: this.literalToMongo(criteria.children[2])
                 }
             }
         }
         else {
             return {
                 [criteria.children[0].text]: {
-                    [this.operatorToMongo(criteria.children[1].text)]: this.arrayToMongo(criteria.children[2])
+                    [this.operatorToMongo(criteria.children[1])]: this.arrayToMongo(criteria.children[2])
                 }
             }
         }
@@ -109,14 +109,18 @@ class AstMongoTransformer {
 
     queryToMongo(query) {
         let group_operator = null;
+        console.log("QUERY", query);
         if (query.children.length == 1)
             return this.criteriaToMongo(query.children[0]);
         else if (query.children.length == 3)
             group_operator = query.children[1];
         else if (query.children.length == 5)
             group_operator = query.children[2];
+        var transformed = query.children
+            .filter(c => c.rule == 'query' || c.rule == 'criteria')
+            .map((c => c.rule == 'query' ? this.queryToMongo(c) : this.criteriaToMongo(c)));
         return {
-            [this.operatorToMongo(group_operator)]: query.children.filter(c => c.rule == 'query').map(this.queryToMongo)
+            [this.operatorToMongo(group_operator)]: transformed
         };
     }
 
@@ -163,20 +167,26 @@ class AstMongoTransformer {
 class MongoParser {
     constructor(syntax) {
         this.get_suggestions = this.get_suggestions.bind(this);
+        this.apply_syntax = this.apply_syntax.bind(this);
         this.syntax = syntax;
         this.symbol_token_mapping = {
-            'AND': ['AND'],
-            'OR': ['OR'],
-            'LIT_VAR': ['ask', 'mid', 'bid'],
-            'ENS_VAR': ['trades', 'traders'],
+            'LIT_VAR': ['name', 'size', 'color', 'price'],
+            'ENS_VAR_SINGULAR': ['part', 'friend'],
+            'ENS_VAR_PLURAL': ['parts', 'friends'],
             'LIT_OPERATOR': ['==', '>=', '<='],
-            'ENS_OPERATOR': ['IN', 'NOT IN']
+            'ENS_OPERATOR': ['in', 'not in'],
+            '(': [],
+            ')': [],
+            '<EOF>': []
         }
     }
 
     get_suggestions(expected, existing) {
         console.log("EXPECTED", expected)
-        const suggestions = _.flatten(expected.map(t => (this.symbol_token_mapping[t] || [])), true);
+        const suggestions = _.flatten(expected.map(t => {
+            let symbol_suggestions = this.symbol_token_mapping[t] || t;
+            return (symbol_suggestions || [])
+        }), true);
         const filtered = suggestions.filter(suggestion => {
             console.log("EXISINTG", suggestion, existing);
             return (suggestion.substr(0, existing.length) == existing);
@@ -239,11 +249,4 @@ class MongoParser {
 
 const ast_mongo_transformer = new AstMongoTransformer();
 
-const main = function(input) {
-    const mongo_parser = new MongoParser();
-    const output = mongo_parser.parse(input);
-
-    console.log(treeify.asTree(output, true));
-};
-
-module.exports = {main: main, MongoParser: MongoParser};
+module.exports = {MongoParser: MongoParser};

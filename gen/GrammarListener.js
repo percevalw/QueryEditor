@@ -38,6 +38,33 @@ GrammarListener.prototype.exitCriteria = function(ctx) {
 };
 
 
+// Enter a parse tree produced by GrammarParser#part_criteria.
+GrammarListener.prototype.enterPart_criteria = function(ctx) {
+};
+
+// Exit a parse tree produced by GrammarParser#part_criteria.
+GrammarListener.prototype.exitPart_criteria = function(ctx) {
+};
+
+
+// Enter a parse tree produced by GrammarParser#must_have_criteria.
+GrammarListener.prototype.enterMust_have_criteria = function(ctx) {
+};
+
+// Exit a parse tree produced by GrammarParser#must_have_criteria.
+GrammarListener.prototype.exitMust_have_criteria = function(ctx) {
+};
+
+
+// Enter a parse tree produced by GrammarParser#normal_criteria.
+GrammarListener.prototype.enterNormal_criteria = function(ctx) {
+};
+
+// Exit a parse tree produced by GrammarParser#normal_criteria.
+GrammarListener.prototype.exitNormal_criteria = function(ctx) {
+};
+
+
 // Enter a parse tree produced by GrammarParser#value.
 GrammarListener.prototype.enterValue = function(ctx) {
 };

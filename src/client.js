@@ -27,7 +27,7 @@ angular.module('app').filter('tree', function() {
 
 class MainController {
     constructor($scope) {
-        this.input = "ask == 5 AND mid == 6";
+        this.input = "ask == 5 AND mid == 6 AND trades IN 5,6";
         this.mongoParser = new MongoParser({
             parsed: [{
                 match: (t) => t.symbol == "AND",

@@ -27,6 +27,21 @@ GrammarVisitor.prototype.visitCriteria = function(ctx) {
 };
 
 
+// Visit a parse tree produced by GrammarParser#part_criteria.
+GrammarVisitor.prototype.visitPart_criteria = function(ctx) {
+};
+
+
+// Visit a parse tree produced by GrammarParser#must_have_criteria.
+GrammarVisitor.prototype.visitMust_have_criteria = function(ctx) {
+};
+
+
+// Visit a parse tree produced by GrammarParser#normal_criteria.
+GrammarVisitor.prototype.visitNormal_criteria = function(ctx) {
+};
+
+
 // Visit a parse tree produced by GrammarParser#value.
 GrammarVisitor.prototype.visitValue = function(ctx) {
 };
